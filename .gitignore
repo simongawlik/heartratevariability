@@ -1,4 +1,7 @@
+settings.py
+
 *.sublime-project
 *.sublime-workspace
 
 workbooks
+__pycache__
