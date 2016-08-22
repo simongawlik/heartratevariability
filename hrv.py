@@ -1,44 +1,38 @@
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 import settings
 import math
 import os
-import requests
-import robobrowser
 
-#login
-#http://www.movescount.com/auth?redirect_uri=%2foverview
-
-br = robobrowser.RoboBrowser(history=True)
 
 url = "http://www.movescount.com/auth?redirect_uri=%2foverview"
 
-br.open(url)
-forms = br.get_forms()
+driver = webdriver.Firefox()
+driver.implicitly_wait(10) # seconds
+driver.get(url)
+driver.find_element_by_name("email").send_keys(settings.email)
+driver.find_element_by_name("password").send_keys(settings.password)
+driver.find_element_by_name("password").send_keys(Keys.RETURN)
 
-print(forms)
-print()
-print()
+try:
+	link = WebDriverWait(driver, 10).until(
+		EC.presence_of_element_located((By.CLASS_NAME, "h3"))
+	)
+finally:
+	#driver.quit()
+	print("test")
 
-form = br.get_form(action="./auth?redirect_uri=%2foverview")
-
-print(form)
-print()
-print()
-
-form['email'].value = settings.email
-form['password'].value = settings.password
-#br.session.headers['Referer'] = url
-
-form["__VIEWSTATE"].value = "/wEPDwUKLTc2MTAxNzQ4MmRkr/lAhZYueBNtINpuoLA7vkegEho="
-form["__VIEWSTATEGENERATOR"].value = "CB4E55BE"
-form.serialize()
-print(form)
-
-br.submit_form(form)
-
-
+workouts = driver.find_elements_by_css_selector('a.h3')
+print(len(workouts))
+workouts[0].click()
 
 
 
