@@ -58,7 +58,39 @@ data_path = os.path.join(os.getcwd(), "workbooks")
 # actions.perform()
 
 
-print(os.listdir(data_path))
+
+def get_new_most_recent_file_index(most_recent, most_recent_index, next, next_index):
+	for i in range(1, 6):
+		if i == 5 and current_file_date[5] > most_recent_file_date[5]:
+			return next_index
+		elif current_file_date[i] < most_recent_file_date[i]:
+			return most_recent_index
+
+
+
+list_of_files = os.listdir(data_path)
+
+filtered_list = []
+
+for file_name in list_of_files:
+	if file_name[0] == 'M':
+		filtered_list.append(file_name)
+
+
+most_recent_file_date = filtered_list[0].split("_")
+
+most_recent_file_index = 0
+
+for i in range(1, len(filtered_list)):
+	current_file_date = filtered_list[i].split("_")
+	most_recent_file_index = get_new_most_recent_file_index(
+		most_recent_file_date, most_recent_file_index,
+		current_file_date, i)
+	most_recent_file_date = filtered_list[most_recent_file_index].split("_")
+	
+
+print(most_recent_file_date)
+
 
 file_name = "Move_2016_08_10_16_46_13.xlsx"
 
@@ -92,4 +124,11 @@ variance = sum_of_squared_errors / (measurement_length - 1)
 std_deviation = math.sqrt(variance)
 
 print(std_deviation)
+
+
+
+
+
+
+
 
