@@ -13,47 +13,53 @@ import math
 import os
 
 
-url = "http://www.movescount.com/auth?redirect_uri=%2foverview"
+data_path = os.path.join(os.getcwd(), "workbooks")
 
-driver = webdriver.Firefox()
-driver.implicitly_wait(10) # seconds
-driver.get(url)
-driver.find_element_by_name("email").send_keys(settings.email)
-driver.find_element_by_name("password").send_keys(settings.password)
-driver.find_element_by_name("password").send_keys(Keys.RETURN)
+## To prevent download dialog
+# profile = webdriver.FirefoxProfile()
+# profile.set_preference('browser.download.folderList', 2)
+# profile.set_preference('browser.download.manager.showWhenStarting', False)
+# profile.set_preference('browser.download.dir', data_path)
+# profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+# driver = webdriver.Firefox(profile)
 
-try:
-	link = WebDriverWait(driver, 10).until(
-		EC.presence_of_element_located((By.CLASS_NAME, "h3"))
-	)
-finally:
-	#driver.quit()
-	print("test")
+# url = "http://www.movescount.com/auth?redirect_uri=%2foverview"
 
-workouts = driver.find_elements_by_css_selector('a.h3')
-print(len(workouts))
-workouts[0].click()
+# driver.implicitly_wait(10) # seconds
+# driver.get(url)
+# driver.find_element_by_name("email").send_keys(settings.email)
+# driver.find_element_by_name("password").send_keys(settings.password)
+# driver.find_element_by_name("password").send_keys(Keys.RETURN)
+
+# try:
+# 	link = WebDriverWait(driver, 10).until(
+# 		EC.presence_of_element_located((By.CLASS_NAME, "h3"))
+# 	)
+# finally:
+# 	print("waited for workouts")	
+
+# workouts = driver.find_elements_by_css_selector('a.h3')
+
+# workouts[0].click()
+
+# try:
+# 	link = WebDriverWait(driver, 10).until(
+# 		EC.presence_of_element_located((By.XPATH, "//a[@data-export-format='xlsx']"))
+# 	)
+# finally:
+# 	print("waited for download button")
+
+# menu = driver.find_elements_by_xpath("//a[@class='link link--light middle-all']")
+# link_to_download = driver.find_elements_by_xpath("//a[@data-export-format='xlsx']")
+
+# actions = webdriver.ActionChains(driver)
+# actions.move_to_element(menu[0])
+# actions.click(link_to_download[0])
+# actions.perform()
 
 
+print(os.listdir(data_path))
 
-
-
-
-'''
-#"http://www.movescount.com/latestmove"
-response = requests.get("http://www.movescount.com/latestmove")
-#print(response.headers)
-#"export?id=117769218&format=xlsx"
-
-html = response.text
-#print(html)
-
-soup = BeautifulSoup(html, "html.parser")
-
-print(soup.find_all("link", limit=3))
-
-
-data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "workbooks")
 file_name = "Move_2016_08_10_16_46_13.xlsx"
 
 wb = load_workbook(os.path.join(data_path, file_name))
@@ -86,4 +92,4 @@ variance = sum_of_squared_errors / (measurement_length - 1)
 std_deviation = math.sqrt(variance)
 
 print(std_deviation)
-'''
+
