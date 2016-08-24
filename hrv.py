@@ -15,7 +15,7 @@ import os
 
 data_path = os.path.join(os.getcwd(), "workbooks")
 
-## To prevent download dialog
+# # To prevent download dialog
 # profile = webdriver.FirefoxProfile()
 # profile.set_preference('browser.download.folderList', 2)
 # profile.set_preference('browser.download.manager.showWhenStarting', False)
@@ -57,15 +57,17 @@ data_path = os.path.join(os.getcwd(), "workbooks")
 # actions.click(link_to_download[0])
 # actions.perform()
 
-
+# driver.close()
 
 def get_new_most_recent_file_index(most_recent, most_recent_index, next, next_index):
 	for i in range(1, 6):
-		if i == 5 and current_file_date[5] > most_recent_file_date[5]:
+		print(current_file_date[i])
+		print(most_recent_file_date[i])
+		if current_file_date[i] > most_recent_file_date[i]:
 			return next_index
 		elif current_file_date[i] < most_recent_file_date[i]:
 			return most_recent_index
-
+	return most_recent_index
 
 
 list_of_files = os.listdir(data_path)
@@ -77,8 +79,9 @@ for file_name in list_of_files:
 		filtered_list.append(file_name)
 
 
-most_recent_file_date = filtered_list[0].split("_")
+print(filtered_list)
 
+most_recent_file_date = filtered_list[0].split("_")
 most_recent_file_index = 0
 
 for i in range(1, len(filtered_list)):
@@ -86,13 +89,14 @@ for i in range(1, len(filtered_list)):
 	most_recent_file_index = get_new_most_recent_file_index(
 		most_recent_file_date, most_recent_file_index,
 		current_file_date, i)
+	print(most_recent_file_index)
 	most_recent_file_date = filtered_list[most_recent_file_index].split("_")
 	
 
-print(most_recent_file_date)
+print(filtered_list[most_recent_file_index])
 
 
-file_name = "Move_2016_08_10_16_46_13.xlsx"
+file_name = filtered_list[most_recent_file_index]
 
 wb = load_workbook(os.path.join(data_path, file_name))
 
@@ -108,6 +112,7 @@ measurement_length = 180
 
 for row in range(start_row, start_row + measurement_length):
 	next_cell = ws.cell(column=start_column, row=row).value
+	#print(x_values)
 	x_values.append(next_cell)
 	x_sum = x_sum + next_cell
 
