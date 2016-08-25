@@ -15,49 +15,49 @@ import os
 
 data_path = os.path.join(os.getcwd(), "workbooks")
 
-# # To prevent download dialog
-# profile = webdriver.FirefoxProfile()
-# profile.set_preference('browser.download.folderList', 2)
-# profile.set_preference('browser.download.manager.showWhenStarting', False)
-# profile.set_preference('browser.download.dir', data_path)
-# profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-# driver = webdriver.Firefox(profile)
+# To prevent download dialog
+profile = webdriver.FirefoxProfile()
+profile.set_preference('browser.download.folderList', 2)
+profile.set_preference('browser.download.manager.showWhenStarting', False)
+profile.set_preference('browser.download.dir', data_path)
+profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+driver = webdriver.Firefox(profile)
 
-# url = "http://www.movescount.com/auth?redirect_uri=%2foverview"
+url = "http://www.movescount.com/auth?redirect_uri=%2foverview"
 
-# driver.implicitly_wait(10) # seconds
-# driver.get(url)
-# driver.find_element_by_name("email").send_keys(settings.email)
-# driver.find_element_by_name("password").send_keys(settings.password)
-# driver.find_element_by_name("password").send_keys(Keys.RETURN)
+driver.implicitly_wait(10) # seconds
+driver.get(url)
+driver.find_element_by_name("email").send_keys(settings.email)
+driver.find_element_by_name("password").send_keys(settings.password)
+driver.find_element_by_name("password").send_keys(Keys.RETURN)
 
-# try:
-# 	link = WebDriverWait(driver, 10).until(
-# 		EC.presence_of_element_located((By.CLASS_NAME, "h3"))
-# 	)
-# finally:
-# 	print("waited for workouts")	
+try:
+	link = WebDriverWait(driver, 10).until(
+		EC.presence_of_element_located((By.CLASS_NAME, "h3"))
+	)
+finally:
+	print("waited for workouts")	
 
-# workouts = driver.find_elements_by_css_selector('a.h3')
+workouts = driver.find_elements_by_css_selector('a.h3')
 
-# workouts[0].click()
+workouts[0].click()
 
-# try:
-# 	link = WebDriverWait(driver, 10).until(
-# 		EC.presence_of_element_located((By.XPATH, "//a[@data-export-format='xlsx']"))
-# 	)
-# finally:
-# 	print("waited for download button")
+try:
+	link = WebDriverWait(driver, 10).until(
+		EC.presence_of_element_located((By.XPATH, "//a[@data-export-format='xlsx']"))
+	)
+finally:
+	print("waited for download button")
 
-# menu = driver.find_elements_by_xpath("//a[@class='link link--light middle-all']")
-# link_to_download = driver.find_elements_by_xpath("//a[@data-export-format='xlsx']")
+menu = driver.find_elements_by_xpath("//a[@class='link link--light middle-all']")
+link_to_download = driver.find_elements_by_xpath("//a[@data-export-format='xlsx']")
 
-# actions = webdriver.ActionChains(driver)
-# actions.move_to_element(menu[0])
-# actions.click(link_to_download[0])
-# actions.perform()
+actions = webdriver.ActionChains(driver)
+actions.move_to_element(menu[0])
+actions.click(link_to_download[0])
+actions.perform()
 
-# driver.close()
+driver.close()
 
 def get_new_most_recent_file_index(most_recent, most_recent_index, next, next_index):
 	for i in range(1, 6):
