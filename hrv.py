@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 import settings
 import math
@@ -15,6 +15,8 @@ import os
 
 data_path = os.path.join(os.getcwd(), "workbooks")
 
+
+# Set up webdriver
 # To prevent download dialog
 profile = webdriver.FirefoxProfile()
 profile.set_preference('browser.download.folderList', 2)
@@ -25,12 +27,16 @@ driver = webdriver.Firefox(profile)
 
 url = "http://www.movescount.com/auth?redirect_uri=%2foverview"
 
+
+# Log in to Movescount
 driver.implicitly_wait(10) # seconds
 driver.get(url)
 driver.find_element_by_name("email").send_keys(settings.email)
 driver.find_element_by_name("password").send_keys(settings.password)
 driver.find_element_by_name("password").send_keys(Keys.RETURN)
 
+
+# Wait until worouts show and select most recent workout
 try:
 	link = WebDriverWait(driver, 10).until(
 		EC.presence_of_element_located((By.CLASS_NAME, "h3"))
@@ -42,6 +48,8 @@ workouts = driver.find_elements_by_css_selector('a.h3')
 
 workouts[0].click()
 
+
+# Wait until export links appear and select xlsx format
 try:
 	link = WebDriverWait(driver, 10).until(
 		EC.presence_of_element_located((By.XPATH, "//a[@data-export-format='xlsx']"))
@@ -59,10 +67,11 @@ actions.perform()
 
 driver.close()
 
+
+
+
 def get_new_most_recent_file_index(most_recent, most_recent_index, next, next_index):
 	for i in range(1, 6):
-		print(current_file_date[i])
-		print(most_recent_file_date[i])
 		if current_file_date[i] > most_recent_file_date[i]:
 			return next_index
 		elif current_file_date[i] < most_recent_file_date[i]:
@@ -74,6 +83,8 @@ list_of_files = os.listdir(data_path)
 
 filtered_list = []
 
+
+# Find xlsx file with name indicating latest timestamp
 for file_name in list_of_files:
 	if file_name[0] == 'M':
 		filtered_list.append(file_name)
@@ -89,7 +100,7 @@ for i in range(1, len(filtered_list)):
 	most_recent_file_index = get_new_most_recent_file_index(
 		most_recent_file_date, most_recent_file_index,
 		current_file_date, i)
-	print(most_recent_file_index)
+	#print(most_recent_file_index)
 	most_recent_file_date = filtered_list[most_recent_file_index].split("_")
 	
 
@@ -98,6 +109,7 @@ print(filtered_list[most_recent_file_index])
 
 file_name = filtered_list[most_recent_file_index]
 
+# Open file
 wb = load_workbook(os.path.join(data_path, file_name))
 
 x_values = []
@@ -109,7 +121,7 @@ start_row = 3
 start_column = 40
 measurement_length = 180
 
-
+# calculate std deviation of HRV (in msec)
 for row in range(start_row, start_row + measurement_length):
 	next_cell = ws.cell(column=start_column, row=row).value
 	#print(x_values)
